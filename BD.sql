@@ -20,3 +20,17 @@ CREATE TABLE `Ventas` (
   KEY `FK_Ventas_idBoleto` (`idBoleto`),
   CONSTRAINT `FK_Ventas_idBoleto` FOREIGN KEY (`idBoleto`) REFERENCES `Boletos` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4;
+
+DELIMITER //
+
+CREATE PROCEDURE sp_historialVentas ()
+ BEGIN
+	select MAX(Boletos.descripcion) AS descripcion, MAX(Boletos.precio) AS precioUnitario, SUM(Ventas.cantidad) AS cantidad,
+    SUM(Ventas.total) AS total
+    from Ventas
+    join Boletos ON Ventas.idBoleto = Boletos.id
+    group by Boletos.id;
+ END;
+//
+
+DELIMITER ;
